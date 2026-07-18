@@ -10,9 +10,9 @@ import { AdBanner } from "@/components/dashboard/ad-banner";
 import { CategoryChips } from "@/components/dashboard/category-chips";
 import { CircleItem } from "@/components/dashboard/circle-item";
 import {
-  FeaturedCard,
-  FeaturedProperty,
+  FeaturedProperty
 } from "@/components/dashboard/featured-card";
+import { Features } from "@/components/dashboard/features";
 import { Property, PropertyCard } from "@/components/dashboard/property-card";
 import { SearchBar } from "@/components/dashboard/search-bar";
 import { SectionHeader } from "@/components/dashboard/section-header";
@@ -32,6 +32,25 @@ const FEATURED_LISTINGS: FeaturedProperty[] = [
   },
   {
     id: "2",
+    title: "Sky Dandelions Apartment",
+    rating: 4.2,
+    location: "Lekki, Lagos",
+    price: "23,00000",
+    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400",
+    badge: "Villa",
+    isFavorite: true,
+  },
+  {
+    id: "3",
+    title: "Sky Dandelions Apartment",
+    rating: 4.9,
+    location: "Lekki, Lagos",
+    price: "23,00000",
+    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400",
+    isFavorite: false,
+  },
+  {
+    id: "4",
     title: "Sky Dandelions Apartment",
     rating: 4.2,
     location: "Lekki, Lagos",
@@ -154,15 +173,9 @@ export default function UserHomeScreen() {
 
         {/* Featured Listings */}
         <SectionHeader title="Featured Listings" actionText="view all" />
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.horizontalList}
-        >
-          {FEATURED_LISTINGS.map((item) => (
-            <FeaturedCard key={item.id} property={item} />
-          ))}
-        </ScrollView>
+        <View style={styles.horizontalList}>
+          <Features listings={FEATURED_LISTINGS} />
+        </View>
 
         {/* Ads */}
         <ScrollView
