@@ -64,11 +64,13 @@ export function FeaturedCard({ property }: FeaturedCardProps) {
   );
 }
 
+import { Dimensions } from "react-native";
+const { width } = Dimensions.get("window");
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    minWidth: 300,
-    width: "auto",
+    width: width - 32, // Screen width minus horizontal padding
     height: 140,
     // backgroundColor: "#F8FAFC",
     borderRadius: 20,
