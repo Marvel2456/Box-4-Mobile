@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { StyleSheet, TouchableOpacity, ActivityIndicator, View, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, TouchableOpacity, ActivityIndicator, View, ScrollView, Dimensions, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -83,16 +83,20 @@ export default function LoginScreen() {
       >
         {/* Step 0 */}
         <View style={[styles.page, { width }]}>
-          <View style={styles.illustrationPlaceholder}>
-            <ThemedText style={{ color: colors.textSecondary }}>[ Illustration Placeholder 1 ]</ThemedText>
-          </View>
+          <Image 
+            source={require('@/assets/images/onboarding/onboardingIllustration1.png')}
+            style={styles.illustrationImage}
+            resizeMode="contain"
+          />
         </View>
 
         {/* Step 1 */}
         <View style={[styles.page, { width }]}>
-          <View style={styles.illustrationPlaceholder}>
-            <ThemedText style={{ color: colors.textSecondary }}>[ Illustration Placeholder 2 ]</ThemedText>
-          </View>
+          <Image 
+            source={require('@/assets/images/onboarding/onboardingIllustration2.png')}
+            style={styles.illustrationImage}
+            resizeMode="contain"
+          />
         </View>
 
         {/* Step 2 */}
@@ -187,16 +191,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: Spacing.four,
   },
-  illustrationPlaceholder: {
-    width: '80%',
-    aspectRatio: 1,
-    backgroundColor: '#f5f5f5',
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#e0e0e0',
-    borderStyle: 'dashed',
+  illustrationImage: {
+    width: '100%',
+    height: 350,
   },
   roleSelectionContainer: {
     width: '100%',
