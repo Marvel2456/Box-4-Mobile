@@ -1,42 +1,52 @@
-import React, { useState, useRef } from 'react';
-import { StyleSheet, TouchableOpacity, ActivityIndicator, View, ScrollView, Dimensions, Image } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRouter } from "expo-router";
+import { useRef, useState } from "react";
+import {
+  ActivityIndicator,
+  Dimensions,
+  Image,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { useAuth } from '@/context/auth-context';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Spacing, Colors } from '@/constants/theme';
-import { useColorScheme } from 'react-native';
-import { OnboardingLogo } from '@/components/onboarding-logo';
-import { PaginationDots } from '@/components/pagination-dots';
+import { OnboardingLogo } from "@/components/onboarding-logo";
+import { PaginationDots } from "@/components/pagination-dots";
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+import { Colors, Spacing } from "@/constants/theme";
+import { useAuth } from "@/context/auth-context";
+import { useColorScheme } from "react-native";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 const ONBOARDING_DATA = [
   {
-    title: 'Where Property Search Meets Simplicity.',
-    subtitle: 'Home starts here.',
+    title: "Where Property Search Meets Simplicity.",
+    subtitle: "Home starts here.",
   },
   {
-    title: 'Discover and list the best property at the best prices.',
-    subtitle: 'Home starts here.',
+    title: "Discover and list the best property at the best prices.",
+    subtitle: "Home starts here.",
   },
   {
-    title: 'Discover and list the best property at the best prices.',
-    subtitle: 'Home starts here.',
-  }
+    title: "Discover and list the best property at the best prices.",
+    subtitle: "Home starts here.",
+  },
 ];
 
 export default function LoginScreen() {
   const { login, isLoading } = useAuth();
   const router = useRouter();
   const scheme = useColorScheme();
-  const colors = Colors[scheme === 'unspecified' ? 'light' : scheme];
+  const colors = Colors[scheme === "unspecified" ? "light" : scheme];
   const insets = useSafeAreaInsets();
-  
+
   const [step, setStep] = useState(0);
-  const [selectedRole, setSelectedRole] = useState<'agent' | 'user' | null>(null);
+  const [selectedRole, setSelectedRole] = useState<"agent" | "user" | null>(
+    null,
+  );
   const scrollViewRef = useRef<ScrollView>(null);
 
   const handleScroll = (event: any) => {
@@ -54,16 +64,21 @@ export default function LoginScreen() {
   const handleLogin = () => {
     if (!selectedRole) return;
     login(selectedRole);
-    router.replace(selectedRole === 'agent' ? '/(agent)' : '/(user)');
+    router.replace(selectedRole === "agent" ? "/(agent)" : "/(user)");
   };
 
   return (
-    <ThemedView style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
+    <ThemedView
+      style={[
+        styles.container,
+        { paddingTop: insets.top, paddingBottom: insets.bottom },
+      ]}
+    >
       {/* Top Header */}
       <View style={styles.header}>
         <OnboardingLogo />
         {step < 2 && (
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[styles.skipButton, { backgroundColor: colors.buttonGrey }]}
             onPress={skipToLast}
           >
@@ -83,8 +98,8 @@ export default function LoginScreen() {
       >
         {/* Step 0 */}
         <View style={[styles.page, { width }]}>
-          <Image 
-            source={require('@/assets/images/onboarding/onboardingIllustration1.png')}
+          <Image
+            source={require("@/assets/images/onboarding/onboardingIllustration1.png")}
             style={styles.illustrationImage}
             resizeMode="contain"
           />
@@ -92,8 +107,8 @@ export default function LoginScreen() {
 
         {/* Step 1 */}
         <View style={[styles.page, { width }]}>
-          <Image 
-            source={require('@/assets/images/onboarding/onboardingIllustration2.png')}
+          <Image
+            source={require("@/assets/images/onboarding/onboardingIllustration2.png")}
             style={styles.illustrationImage}
             resizeMode="contain"
           />
@@ -102,28 +117,50 @@ export default function LoginScreen() {
         {/* Step 2 */}
         <View style={[styles.page, { width }]}>
           <View style={styles.roleSelectionContainer}>
-            <ThemedText style={styles.roleTitle}>What kind of user are you?</ThemedText>
-            
-            <TouchableOpacity 
+            <ThemedText style={styles.roleTitle}>
+              What kind of user are you?
+            </ThemedText>
+
+            <TouchableOpacity
               style={[
-                styles.roleButton, 
-                { backgroundColor: selectedRole === 'user' ? colors.tintBlue : colors.buttonGrey }
+                styles.roleButton,
+                {
+                  backgroundColor:
+                    selectedRole === "user"
+                      ? colors.tintBlue
+                      : colors.buttonGrey,
+                },
               ]}
-              onPress={() => setSelectedRole('user')}
+              onPress={() => setSelectedRole("user")}
             >
-              <ThemedText style={[styles.roleButtonText, { color: selectedRole === 'user' ? '#fff' : colors.text }]}>
+              <ThemedText
+                style={[
+                  styles.roleButtonText,
+                  { color: selectedRole === "user" ? "#fff" : colors.text },
+                ]}
+              >
                 Buyer
               </ThemedText>
             </TouchableOpacity>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               style={[
-                styles.roleButton, 
-                { backgroundColor: selectedRole === 'agent' ? colors.tintBlue : colors.buttonGrey }
+                styles.roleButton,
+                {
+                  backgroundColor:
+                    selectedRole === "agent"
+                      ? colors.tintBlue
+                      : colors.buttonGrey,
+                },
               ]}
-              onPress={() => setSelectedRole('agent')}
+              onPress={() => setSelectedRole("agent")}
             >
-              <ThemedText style={[styles.roleButtonText, { color: selectedRole === 'agent' ? '#fff' : colors.text }]}>
+              <ThemedText
+                style={[
+                  styles.roleButtonText,
+                  { color: selectedRole === "agent" ? "#fff" : colors.text },
+                ]}
+              >
                 Agent
               </ThemedText>
             </TouchableOpacity>
@@ -133,18 +170,25 @@ export default function LoginScreen() {
 
       {/* Bottom Section */}
       <View style={styles.bottomSection}>
-        <ThemedText style={styles.titleText}>{ONBOARDING_DATA[step].title}</ThemedText>
-        <ThemedText style={styles.subtitleText}>{ONBOARDING_DATA[step].subtitle}</ThemedText>
-        
+        <ThemedText style={styles.titleText}>
+          {ONBOARDING_DATA[step].title}
+        </ThemedText>
+        <ThemedText style={styles.subtitleText}>
+          {ONBOARDING_DATA[step].subtitle}
+        </ThemedText>
+
         <View style={styles.dotsContainer}>
           <PaginationDots total={3} current={step} />
         </View>
 
         {step === 2 && (
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[
-              styles.getStartedButton, 
-              { backgroundColor: colors.tintRed, opacity: selectedRole ? 1 : 0.5 }
+              styles.getStartedButton,
+              {
+                backgroundColor: colors.tintRed,
+                opacity: selectedRole ? 1 : 0.5,
+              },
             ]}
             onPress={handleLogin}
             disabled={!selectedRole || isLoading}
@@ -152,7 +196,7 @@ export default function LoginScreen() {
             {isLoading ? (
               <ActivityIndicator color="#fff" />
             ) : (
-              <ThemedText style={styles.getStartedText}>Get Started</ThemedText>
+              <ThemedText style={styles.getStartedText}>Continue</ThemedText>
             )}
           </TouchableOpacity>
         )}
@@ -166,9 +210,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: Spacing.four,
     paddingTop: Spacing.two,
     height: 60,
@@ -180,71 +224,71 @@ const styles = StyleSheet.create({
   },
   skipText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   scrollView: {
     flex: 1,
   },
   page: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: Spacing.four,
   },
   illustrationImage: {
-    width: '100%',
+    width: "100%",
     height: 350,
   },
   roleSelectionContainer: {
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
     gap: Spacing.four,
   },
   roleTitle: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: Spacing.two,
-    textAlign: 'center',
+    textAlign: "center",
   },
   roleButton: {
-    width: '100%',
+    width: "100%",
     paddingVertical: Spacing.three,
     borderRadius: Spacing.two,
-    alignItems: 'center',
+    alignItems: "center",
   },
   roleButtonText: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   bottomSection: {
     paddingHorizontal: Spacing.four,
     paddingBottom: Spacing.four,
-    alignItems: 'center',
+    alignItems: "center",
   },
   titleText: {
     fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     marginBottom: Spacing.one,
   },
   subtitleText: {
     fontSize: 16,
-    color: '#888',
-    textAlign: 'center',
+    color: "#888",
+    textAlign: "center",
   },
   dotsContainer: {
     marginVertical: Spacing.four,
   },
   getStartedButton: {
-    width: '100%',
+    width: "100%",
     paddingVertical: Spacing.three,
     borderRadius: Spacing.two,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: Spacing.two,
   },
   getStartedText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
