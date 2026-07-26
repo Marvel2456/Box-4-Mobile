@@ -1,10 +1,10 @@
-import axios from "axios";
+import { create } from "axios";
 import * as SecureStore from "expo-secure-store";
 
 const API_BASE_URL =
   process.env.EXPO_PUBLIC_API_BASE_URL || "https://box4realestate.cloud/api/v1";
 
-export const apiClient = axios.create({
+export const apiClient = create({
   baseURL: API_BASE_URL,
   headers: {
     accept: "application/json",
