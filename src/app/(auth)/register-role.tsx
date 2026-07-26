@@ -1,7 +1,6 @@
 import { useRouter } from "expo-router";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View, useColorScheme } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useColorScheme } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -13,7 +12,7 @@ export default function RegisterRoleScreen() {
   const colors = Colors[scheme === "unspecified" ? "light" : scheme];
   const insets = useSafeAreaInsets();
 
-  const handleSelectRole = (role: "user" | "agent") => {
+  const handleSelectRole = (role: "buyer" | "agent") => {
     router.push({
       pathname: "/(auth)/register",
       params: { role },
@@ -32,10 +31,10 @@ export default function RegisterRoleScreen() {
 
         <TouchableOpacity
           style={[styles.roleButton, { backgroundColor: colors.buttonGrey }]}
-          onPress={() => handleSelectRole("user")}
+          onPress={() => handleSelectRole("buyer")}
         >
           <ThemedText style={[styles.roleButtonText, { color: colors.text }]}>
-            Buyer
+            User
           </ThemedText>
         </TouchableOpacity>
 

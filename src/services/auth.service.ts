@@ -23,7 +23,7 @@ export const AuthService = {
    * Register as an agent or user
    */
   register: async (credentials: RegisterCredentials): Promise<AuthResponse> => {
-    const response = await apiClient.post("/auth/register", credentials);
+    const response = await apiClient.post("/auth/register/", credentials);
     return response.data;
   },
 
@@ -31,7 +31,7 @@ export const AuthService = {
    * Example login endpoint
    */
   login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
-    const response = await apiClient.post("/auth/login", credentials);
+    const response = await apiClient.post("/auth/login/", credentials);
     return response.data;
   },
 
@@ -39,14 +39,14 @@ export const AuthService = {
    * Example logout endpoint
    */
   logout: async (): Promise<void> => {
-    await apiClient.post("/auth/logout");
+    await apiClient.post("/auth/logout/");
   },
 
   /**
    * Example endpoint to fetch the current user's profile
    */
   getMe: async () => {
-    const response = await apiClient.get("/auth/me");
+    const response = await apiClient.get("/auth/me/");
     return response.data;
   },
 };
