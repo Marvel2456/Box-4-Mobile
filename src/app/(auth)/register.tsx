@@ -21,7 +21,12 @@ import { AuthService } from "@/services/auth.service";
 export default function RegisterScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { role } = useLocalSearchParams<{ role: "agent" | "user" }>();
+  let { role } = useLocalSearchParams<{ role: "agent" | "user" }>();
+  
+  // Fallback in case of development reloads where params are lost
+  if (!role) {
+    role = "user";
+  }
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -30,7 +35,10 @@ export default function RegisterScreen() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleRegister = async () => {
-    if (!fullName || !email || !password || !role) return;
+    if (!fullName || !email || !password) {
+      alert("Please fill in all fields.");
+      return;
+    }
     
     setIsLoading(true);
     try {
