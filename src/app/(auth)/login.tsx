@@ -139,7 +139,7 @@ export default function LoginScreen() {
                   { color: selectedRole === "user" ? "#fff" : colors.text },
                 ]}
               >
-                Buyer
+                Register
               </ThemedText>
             </TouchableOpacity>
 
@@ -161,7 +161,7 @@ export default function LoginScreen() {
                   { color: selectedRole === "agent" ? "#fff" : colors.text },
                 ]}
               >
-                Agent
+                Log In
               </ThemedText>
             </TouchableOpacity>
           </View>
