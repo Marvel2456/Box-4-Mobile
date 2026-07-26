@@ -22,7 +22,7 @@ export default function RegisterScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   let { role } = useLocalSearchParams<{ role: "agent" | "user" }>();
-  
+
   // Fallback in case of development reloads where params are lost
   if (!role) {
     role = "user";
@@ -39,7 +39,7 @@ export default function RegisterScreen() {
       alert("Please fill in all fields.");
       return;
     }
-    
+
     setIsLoading(true);
     try {
       await AuthService.register({
@@ -76,15 +76,23 @@ export default function RegisterScreen() {
           {/* Header */}
           <View style={styles.headerContainer}>
             <ThemedText style={styles.title}>
-              Create your <ThemedText style={styles.titleHighlight}>account</ThemedText>
+              Create your{" "}
+              <ThemedText style={styles.titleHighlight}>account</ThemedText>
             </ThemedText>
-            <ThemedText style={styles.subtitle}>Create a new account</ThemedText>
+            <ThemedText style={styles.subtitle}>
+              Create a new account
+            </ThemedText>
           </View>
 
           {/* Form */}
           <View style={styles.formContainer}>
             <View style={styles.inputWrapper}>
-              <Ionicons name="person-outline" size={20} color="#777" style={styles.inputIcon} />
+              <Ionicons
+                name="person-outline"
+                size={20}
+                color="#777"
+                style={styles.inputIcon}
+              />
               <TextInput
                 style={styles.input}
                 placeholder="Full name"
@@ -96,7 +104,12 @@ export default function RegisterScreen() {
             </View>
 
             <View style={styles.inputWrapper}>
-              <Ionicons name="mail-outline" size={20} color="#777" style={styles.inputIcon} />
+              <Ionicons
+                name="mail-outline"
+                size={20}
+                color="#777"
+                style={styles.inputIcon}
+              />
               <TextInput
                 style={styles.input}
                 placeholder="Email"
@@ -109,7 +122,12 @@ export default function RegisterScreen() {
             </View>
 
             <View style={styles.inputWrapper}>
-              <Ionicons name="lock-closed-outline" size={20} color="#777" style={styles.inputIcon} />
+              <Ionicons
+                name="lock-closed-outline"
+                size={20}
+                color="#777"
+                style={styles.inputIcon}
+              />
               <TextInput
                 style={styles.input}
                 placeholder="Password"
@@ -122,24 +140,33 @@ export default function RegisterScreen() {
 
             <View style={styles.formOptionsRow}>
               <TouchableOpacity>
-                <ThemedText style={styles.termsText}>Terms of service</ThemedText>
+                <ThemedText style={styles.termsText}>
+                  Terms of service
+                </ThemedText>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                <ThemedText style={styles.showPasswordText}>Show password</ThemedText>
+                <ThemedText style={styles.showPasswordText}>
+                  Show password
+                </ThemedText>
               </TouchableOpacity>
             </View>
           </View>
 
           {/* Register Button */}
           <TouchableOpacity
-            style={[styles.registerButton, { backgroundColor: Colors.light.tintRed }]}
+            style={[
+              styles.registerButton,
+              { backgroundColor: Colors.light.tintRed },
+            ]}
             onPress={handleRegister}
             disabled={isLoading}
           >
             {isLoading ? (
               <ActivityIndicator color="#fff" />
             ) : (
-              <ThemedText style={styles.registerButtonText}>Register</ThemedText>
+              <ThemedText style={styles.registerButtonText}>
+                Register
+              </ThemedText>
             )}
           </TouchableOpacity>
         </ScrollView>
