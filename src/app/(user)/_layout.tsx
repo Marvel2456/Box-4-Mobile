@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { useColorScheme } from "react-native";
+import { Pressable, useColorScheme } from "react-native";
 
 import { Colors } from "@/constants/theme";
 
@@ -14,6 +14,13 @@ export default function UserLayout() {
         headerShown: false,
         tabBarActiveTintColor: colors.tintRed,
         tabBarInactiveTintColor: colors.textSecondary,
+        tabBarButton: ({ ref, ...props }) => (
+          <Pressable
+            {...props}
+            ref={ref as any}
+            android_ripple={{ color: "transparent" }}
+          />
+        ),
         tabBarStyle: {
           backgroundColor: colors.background,
           borderTopColor: colors.backgroundElement,
