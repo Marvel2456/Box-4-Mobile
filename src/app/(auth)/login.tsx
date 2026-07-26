@@ -44,9 +44,6 @@ export default function LoginScreen() {
   const insets = useSafeAreaInsets();
 
   const [step, setStep] = useState(0);
-  const [selectedRole, setSelectedRole] = useState<"agent" | "user" | null>(
-    null,
-  );
   const scrollViewRef = useRef<ScrollView>(null);
 
   const handleScroll = (event: any) => {
@@ -57,14 +54,17 @@ export default function LoginScreen() {
     }
   };
 
+  // Navigation handlers
   const skipToLast = () => {
     scrollViewRef.current?.scrollTo({ x: width * 2, animated: true });
   };
 
-  const handleLogin = () => {
-    if (!selectedRole) return;
-    login(selectedRole);
-    router.replace(selectedRole === "agent" ? "/(agent)" : "/(user)");
+  const handleRegister = () => {
+    router.push("/(auth)/register-role");
+  };
+
+  const handleLoginNav = () => {
+    router.push("/(auth)/login-form");
   };
 
   return (
@@ -117,26 +117,19 @@ export default function LoginScreen() {
         {/* Step 2 */}
         <View style={[styles.page, { width }]}>
           <View style={styles.roleSelectionContainer}>
-            <ThemedText style={styles.roleTitle}>
-              What kind of user are you?
-            </ThemedText>
-
             <TouchableOpacity
               style={[
                 styles.roleButton,
                 {
-                  backgroundColor:
-                    selectedRole === "user"
-                      ? colors.tintBlue
-                      : colors.buttonGrey,
+                  backgroundColor: colors.tintRed,
                 },
               ]}
-              onPress={() => setSelectedRole("user")}
+              onPress={handleRegister}
             >
               <ThemedText
                 style={[
                   styles.roleButtonText,
-                  { color: selectedRole === "user" ? "#fff" : colors.text },
+                  { color: "#fff" },
                 ]}
               >
                 Register
@@ -147,18 +140,15 @@ export default function LoginScreen() {
               style={[
                 styles.roleButton,
                 {
-                  backgroundColor:
-                    selectedRole === "agent"
-                      ? colors.tintBlue
-                      : colors.buttonGrey,
+                  backgroundColor: colors.buttonGrey,
                 },
               ]}
-              onPress={() => setSelectedRole("agent")}
+              onPress={handleLoginNav}
             >
               <ThemedText
                 style={[
                   styles.roleButtonText,
-                  { color: selectedRole === "agent" ? "#fff" : colors.text },
+                  { color: colors.text },
                 ]}
               >
                 Log{"\u00A0"}In
@@ -180,26 +170,6 @@ export default function LoginScreen() {
         <View style={styles.dotsContainer}>
           <PaginationDots total={3} current={step} />
         </View>
-
-        {step === 2 && (
-          <TouchableOpacity
-            style={[
-              styles.getStartedButton,
-              {
-                backgroundColor: colors.tintRed,
-                opacity: selectedRole ? 1 : 0.5,
-              },
-            ]}
-            onPress={handleLogin}
-            disabled={!selectedRole || isLoading}
-          >
-            {isLoading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <ThemedText style={styles.getStartedText}>Get{"\u00A0"}Started</ThemedText>
-            )}
-          </TouchableOpacity>
-        )}
       </View>
     </ThemedView>
   );
