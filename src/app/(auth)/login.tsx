@@ -161,7 +161,7 @@ export default function LoginScreen() {
                   { color: selectedRole === "agent" ? "#fff" : colors.text },
                 ]}
               >
-                Log In
+                Log{"\u00A0"}In
               </ThemedText>
             </TouchableOpacity>
           </View>
@@ -196,7 +196,7 @@ export default function LoginScreen() {
             {isLoading ? (
               <ActivityIndicator color="#fff" />
             ) : (
-              <ThemedText style={styles.getStartedText}>Continue</ThemedText>
+              <ThemedText style={styles.getStartedText}>Get{"\u00A0"}Started</ThemedText>
             )}
           </TouchableOpacity>
         )}
@@ -254,11 +254,14 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingVertical: Spacing.three,
     borderRadius: Spacing.two,
+    flexDirection: "row",
+    justifyContent: "center",
     alignItems: "center",
   },
   roleButtonText: {
     fontSize: 18,
     fontWeight: "600",
+    textAlign: "center",
   },
   bottomSection: {
     paddingHorizontal: Spacing.four,
@@ -283,6 +286,8 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingVertical: Spacing.three,
     borderRadius: Spacing.two,
+    flexDirection: "row",
+    justifyContent: "center",
     alignItems: "center",
     marginTop: Spacing.two,
   },
@@ -290,5 +295,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
+    textAlign: "center",
   },
 });
