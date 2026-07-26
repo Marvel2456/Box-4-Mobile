@@ -44,7 +44,7 @@ export default function RegisterScreen() {
     try {
       await AuthService.register({
         role,
-        fullName,
+        full_name: fullName,
         email,
         password,
       });
