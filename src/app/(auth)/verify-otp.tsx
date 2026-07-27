@@ -96,12 +96,21 @@ export default function VerifyOtpScreen() {
 
   const handleResendOtp = async () => {
     if (timer > 0) return;
+    if (!email) {
+      alert("Missing email information.");
+      return;
+    }
 
-    // In a real app, call a resend OTP endpoint here
-    alert("New OTP sent!");
-    setTimer(120);
-    setOtp(["", "", "", ""]);
-    inputRefs.current[0]?.focus();
+    try {
+      await AuthService.resendOtp({ email });
+      alert("New OTP sent!");
+      setTimer(120);
+      setOtp(["", "", "", ""]);
+      inputRefs.current[0]?.focus();
+    } catch (error) {
+      console.error("Failed to resend OTP:", error);
+      alert("Failed to resend OTP. Please try again.");
+    }
   };
 
   const formatTimer = (time: number) => {

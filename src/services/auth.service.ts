@@ -33,7 +33,9 @@ export const AuthService = {
   /**
    * Register as an agent or user
    */
-  register: async (credentials: RegisterCredentials): Promise<RegisterResponse> => {
+  register: async (
+    credentials: RegisterCredentials,
+  ): Promise<RegisterResponse> => {
     const response = await apiClient.post("/auth/register/", credentials);
     return response.data;
   },
@@ -41,8 +43,15 @@ export const AuthService = {
   /**
    * Verify OTP
    */
-  verifyOtp: async (data: { email: string; otp_code: string }): Promise<AuthResponse> => {
+  verifyOtp: async (data: {
+    email: string;
+    otp_code: string;
+  }): Promise<AuthResponse> => {
     const response = await apiClient.post("/auth/verify-otp/", data);
+    return response.data;
+  },
+  resendOtp: async (data: { email: string }): Promise<AuthResponse> => {
+    const response = await apiClient.post("/auth/resend-otp/", data);
     return response.data;
   },
 
