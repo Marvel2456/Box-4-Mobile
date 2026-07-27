@@ -27,13 +27,13 @@ export default function VerifyOtpScreen() {
   const { email } = useLocalSearchParams<{ email: string }>();
   const { login } = useAuth(); // If we want to simulate login right after verify, though we might not have role here.
 
-  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [timer, setTimer] = useState(2);
   const [resentMessage, setResentMessage] = useState("");
   const toastRef = useRef<ToastRef>(null);
 
-  const inputRefs = useRef<(TextInput | null)[]>([null, null, null, null]);
+  const inputRef = useRef<TextInput>(null);
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
@@ -45,28 +45,14 @@ export default function VerifyOtpScreen() {
     return () => clearInterval(interval);
   }, [timer]);
 
-  const handleOtpChange = (text: string, index: number) => {
-    const newOtp = [...otp];
-    // Allow only numbers
-    const formattedText = text.replace(/[^0-9]/g, "");
-    newOtp[index] = formattedText.slice(-1); // Only take the last char if they try to paste multiple
-
-    setOtp(newOtp);
-
-    // Move to next input if there's a value
-    if (formattedText && index < 3) {
-      inputRefs.current[index + 1]?.focus();
-    }
+  const handleOtpChange = (text: string) => {
+    // Allow only numbers, max 4 digits
+    const formattedText = text.replace(/[^0-9]/g, "").slice(0, 4);
+    setOtp(formattedText);
 
     // Check if fully entered
-    if (newOtp.every((val) => val !== "")) {
-      verifyCode(newOtp.join(""));
-    }
-  };
-
-  const handleKeyPress = (e: any, index: number) => {
-    if (e.nativeEvent.key === "Backspace" && !otp[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
+    if (formattedText.length === 4) {
+      verifyCode(formattedText);
     }
   };
 
@@ -95,8 +81,8 @@ export default function VerifyOtpScreen() {
     } catch (error) {
       console.error("OTP Verification failed:", error);
       toastRef.current?.show("Invalid OTP code. Please try again.", "error");
-      setOtp(["", "", "", ""]);
-      inputRefs.current[0]?.focus();
+      setOtp("");
+      inputRef.current?.focus();
     } finally {
       setIsLoading(false);
     }
@@ -116,8 +102,8 @@ export default function VerifyOtpScreen() {
         setResentMessage("");
       }, 3000);
       setTimer(2);
-      setOtp(["", "", "", ""]);
-      inputRefs.current[0]?.focus();
+      setOtp("");
+      inputRef.current?.focus();
     } catch (error) {
       console.error("Failed to resend OTP:", error);
       toastRef.current?.show(
@@ -168,28 +154,42 @@ export default function VerifyOtpScreen() {
           </ThemedText>
 
           {/* OTP Input container */}
-          <View style={styles.otpContainer}>
-            {otp.map((digit, index) => (
-              <TextInput
-                key={index}
-                ref={(ref) => {
-                  inputRefs.current[index] = ref;
-                }}
-                style={[
-                  styles.otpInput,
-                  digit ? styles.otpInputFilled : null,
-                  isLoading && styles.otpInputDisabled,
-                ]}
-                value={digit}
-                onChangeText={(text) => handleOtpChange(text, index)}
-                onKeyPress={(e) => handleKeyPress(e, index)}
-                keyboardType="numeric"
-                maxLength={2} // Allow 2 to catch fast typing/pasting, but slice in handler
-                editable={!isLoading}
-                selectTextOnFocus
-              />
-            ))}
-          </View>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => inputRef.current?.focus()}
+            style={styles.otpContainer}
+          >
+            {[0, 1, 2, 3].map((index) => {
+              const digit = otp[index] || "";
+              return (
+                <View
+                  key={index}
+                  style={[
+                    styles.otpBox,
+                    digit ? styles.otpBoxFilled : null,
+                    isLoading && styles.otpBoxDisabled,
+                  ]}
+                >
+                  <ThemedText
+                    style={[styles.otpText, digit ? styles.otpTextFilled : null]}
+                  >
+                    {digit}
+                  </ThemedText>
+                </View>
+              );
+            })}
+          </TouchableOpacity>
+
+          <TextInput
+            ref={inputRef}
+            value={otp}
+            onChangeText={handleOtpChange}
+            keyboardType="numeric"
+            maxLength={4}
+            editable={!isLoading}
+            style={styles.hiddenInput}
+            autoFocus
+          />
 
           {isLoading && (
             <ActivityIndicator
@@ -286,25 +286,36 @@ const styles = StyleSheet.create({
     gap: 16,
     marginTop: Spacing.four,
   },
-  otpInput: {
+  otpBox: {
     width: 60,
     height: 60,
     borderRadius: 12,
     backgroundColor: "#F5F6F8",
     borderWidth: 1,
     borderColor: "transparent",
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: "#1E1E2D",
+    justifyContent: "center",
+    alignItems: "center",
   },
-  otpInputFilled: {
+  otpBoxFilled: {
     borderColor: "#E52020",
     backgroundColor: "#FFF2F2",
+  },
+  otpBoxDisabled: {
+    opacity: 0.7,
+  },
+  otpText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#1E1E2D",
+  },
+  otpTextFilled: {
     color: "#E52020",
   },
-  otpInputDisabled: {
-    opacity: 0.7,
+  hiddenInput: {
+    position: "absolute",
+    width: 1,
+    height: 1,
+    opacity: 0,
   },
   spacer: {
     flex: 1,
