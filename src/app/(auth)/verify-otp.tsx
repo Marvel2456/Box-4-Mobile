@@ -29,7 +29,7 @@ export default function VerifyOtpScreen() {
 
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [timer, setTimer] = useState(2);
+  const [timer, setTimer] = useState(180);
   const [resentMessage, setResentMessage] = useState("");
   const toastRef = useRef<ToastRef>(null);
 
@@ -82,7 +82,9 @@ export default function VerifyOtpScreen() {
       console.error("OTP Verification failed:", error);
       toastRef.current?.show("Invalid OTP code. Please try again.", "error");
       setOtp("");
-      inputRef.current?.focus();
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
     } finally {
       setIsLoading(false);
     }
@@ -101,7 +103,7 @@ export default function VerifyOtpScreen() {
       setTimeout(() => {
         setResentMessage("");
       }, 3000);
-      setTimer(2);
+      setTimer(120);
       setOtp("");
       inputRef.current?.focus();
     } catch (error) {
@@ -126,7 +128,7 @@ export default function VerifyOtpScreen() {
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <ScrollView 
+        <ScrollView
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
         >
@@ -157,11 +159,7 @@ export default function VerifyOtpScreen() {
           </ThemedText>
 
           {/* OTP Input container */}
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => inputRef.current?.focus()}
-            style={styles.otpContainer}
-          >
+          <View style={styles.otpContainer}>
             {[0, 1, 2, 3].map((index) => {
               const digit = otp[index] || "";
               return (
@@ -174,25 +172,28 @@ export default function VerifyOtpScreen() {
                   ]}
                 >
                   <ThemedText
-                    style={[styles.otpText, digit ? styles.otpTextFilled : null]}
+                    style={[
+                      styles.otpText,
+                      digit ? styles.otpTextFilled : null,
+                    ]}
                   >
                     {digit}
                   </ThemedText>
                 </View>
               );
             })}
-          </TouchableOpacity>
 
-          <TextInput
-            ref={inputRef}
-            value={otp}
-            onChangeText={handleOtpChange}
-            keyboardType="numeric"
-            maxLength={4}
-            editable={!isLoading}
-            style={styles.hiddenInput}
-            autoFocus
-          />
+            <TextInput
+              ref={inputRef}
+              value={otp}
+              onChangeText={handleOtpChange}
+              keyboardType="numeric"
+              maxLength={4}
+              editable={!isLoading}
+              style={styles.hiddenInput}
+              autoFocus
+            />
+          </View>
 
           {isLoading && (
             <ActivityIndicator
@@ -316,8 +317,8 @@ const styles = StyleSheet.create({
   },
   hiddenInput: {
     position: "absolute",
-    width: 1,
-    height: 1,
+    width: "100%",
+    height: "100%",
     opacity: 0,
   },
   spacer: {
