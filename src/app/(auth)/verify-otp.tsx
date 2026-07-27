@@ -158,11 +158,14 @@ export default function VerifyOtpScreen() {
             </ThemedText>
           </View>
 
-          {resentMessage ? (
-            <ThemedText style={styles.resentMessageText}>
-              {resentMessage}
-            </ThemedText>
-          ) : null}
+          <ThemedText
+            style={[
+              styles.resentMessageText,
+              { opacity: resentMessage ? 1 : 0 },
+            ]}
+          >
+            {resentMessage || " "}
+          </ThemedText>
 
           {/* OTP Input container */}
           <View style={styles.otpContainer}>
@@ -273,6 +276,7 @@ const styles = StyleSheet.create({
   resentMessageText: {
     color: "#E52020",
     textAlign: "center",
+    fontSize: 14,
     marginTop: Spacing.two,
     fontWeight: "bold",
   },
