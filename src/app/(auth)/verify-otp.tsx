@@ -13,9 +13,9 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { BackButton } from "@/components/back-button";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { BackButton } from "@/components/back-button";
 import { Spacing } from "@/constants/theme";
 import { useAuth } from "@/context/auth-context";
 import { AuthService } from "@/services/auth.service";
@@ -28,7 +28,7 @@ export default function VerifyOtpScreen() {
 
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
-  const [timer, setTimer] = useState(60);
+  const [timer, setTimer] = useState(1);
 
   const inputRefs = useRef<(TextInput | null)[]>([null, null, null, null]);
 
@@ -99,7 +99,7 @@ export default function VerifyOtpScreen() {
 
     // In a real app, call a resend OTP endpoint here
     alert("New OTP sent!");
-    setTimer(60);
+    setTimer(120);
     setOtp(["", "", "", ""]);
     inputRefs.current[0]?.focus();
   };
