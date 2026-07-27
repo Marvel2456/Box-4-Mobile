@@ -21,11 +21,11 @@ import { AuthService } from "@/services/auth.service";
 export default function RegisterScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  let { role } = useLocalSearchParams<{ role: "agent" | "buyer" }>();
+  let { role } = useLocalSearchParams<{ role: "agent" | "user" }>();
 
   // Fallback in case of development reloads where params are lost
   if (!role) {
-    role = "buyer";
+    role = "user";
   }
 
   const [fullName, setFullName] = useState("");
