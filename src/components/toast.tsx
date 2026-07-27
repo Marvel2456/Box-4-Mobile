@@ -1,7 +1,5 @@
-import React, { forwardRef, useImperativeHandle, useState, useRef } from "react";
-import { Animated, StyleSheet, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Colors } from "@/constants/theme";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { Animated, StyleSheet, Text } from "react-native";
 
 export interface ToastRef {
   show: (message: string, type?: "success" | "error" | "info") => void;
@@ -10,72 +8,88 @@ export interface ToastRef {
 export const Toast = forwardRef<ToastRef, {}>((props, ref) => {
   const [message, setMessage] = useState("");
   const [type, setType] = useState<"success" | "error" | "info">("info");
-  const translateY = useRef(new Animated.Value(-100)).current; // Start hidden above
-  const insets = useSafeAreaInsets();
+  const [isVisible, setIsVisible] = useState(false);
+  const opacity = useRef(new Animated.Value(0)).current;
+  const scale = useRef(new Animated.Value(0.8)).current;
 
   useImperativeHandle(ref, () => ({
     show: (msg: string, msgType: "success" | "error" | "info" = "info") => {
       setMessage(msg);
       setType(msgType);
+      setIsVisible(true);
 
-      // Slide in
-      Animated.timing(translateY, {
-        toValue: insets.top + 10,
-        duration: 300,
-        useNativeDriver: true,
-      }).start(() => {
-        // Wait for 1 second, then slide out
+      // Pop in
+      Animated.parallel([
+        Animated.timing(opacity, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.spring(scale, {
+          toValue: 1,
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        // Wait for 1 second, then pop out
         setTimeout(() => {
-          Animated.timing(translateY, {
-            toValue: -100,
-            duration: 300,
-            useNativeDriver: true,
-          }).start();
+          Animated.parallel([
+            Animated.timing(opacity, {
+              toValue: 0,
+              duration: 200,
+              useNativeDriver: true,
+            }),
+            Animated.timing(scale, {
+              toValue: 0.8,
+              duration: 200,
+              useNativeDriver: true,
+            }),
+          ]).start(() => {
+            setIsVisible(false);
+          });
         }, 1000);
       });
     },
   }));
 
-  let backgroundColor = "#333";
-  if (type === "success") backgroundColor = "#4CAF50";
-  if (type === "error") backgroundColor = "#E52020";
+  if (!isVisible) return null;
+
+  let textColor = "#333";
+  if (type === "success") textColor = "#4CAF50";
+  if (type === "error") textColor = "#E52020";
 
   return (
     <Animated.View
-      style={[
-        styles.container,
-        { backgroundColor, transform: [{ translateY }] },
-      ]}
+      pointerEvents="none"
+      style={[styles.popupBox, { opacity, transform: [{ scale }] }]}
     >
-      <Text style={styles.text}>{message}</Text>
+      <Text style={[styles.text, { color: textColor }]}>{message}</Text>
     </Animated.View>
   );
 });
 
 const styles = StyleSheet.create({
-  container: {
+  popupBox: {
     position: "absolute",
-    top: 0,
-    left: 20,
-    right: 20,
-    padding: 16,
-    borderRadius: 8,
-    flexDirection: "row",
+    top: "50%",
+    left: "50%",
+    marginLeft: -100,
+    marginTop: -100,
+    width: 210,
+    height: 210,
+    backgroundColor: "#ffffffed",
+    borderRadius: 2,
+    padding: 24,
     justifyContent: "center",
     alignItems: "center",
     zIndex: 9999,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    // shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    // shadowOpacity: 0.25,
+    // shadowRadius: 20,
+    // elevation: 10,
   },
   text: {
-    color: "#fff",
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
   },
