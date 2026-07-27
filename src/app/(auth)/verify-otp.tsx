@@ -219,7 +219,7 @@ export default function VerifyOtpScreen() {
           {/* Resend */}
           <View style={styles.resendContainer}>
             <ThemedText style={styles.resendText}>
-              Didn't receive the OTP?{" "}
+              Didn&apos;t receive the OTP?{" "}
             </ThemedText>
             <TouchableOpacity onPress={handleResendOtp} disabled={timer > 0}>
               <ThemedText
