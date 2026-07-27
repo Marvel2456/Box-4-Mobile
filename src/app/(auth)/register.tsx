@@ -137,17 +137,19 @@ export default function RegisterScreen() {
                 onChangeText={setPassword}
                 secureTextEntry={!showPassword}
               />
+              <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
+                <Ionicons
+                  name={showPassword ? "eye-off-outline" : "eye-outline"}
+                  size={20}
+                  color="#777"
+                />
+              </TouchableOpacity>
             </View>
 
             <View style={styles.formOptionsRow}>
               <TouchableOpacity>
                 <ThemedText style={styles.termsText}>
                   Terms of service
-                </ThemedText>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                <ThemedText style={styles.showPasswordText}>
-                  Show password
                 </ThemedText>
               </TouchableOpacity>
             </View>
@@ -236,10 +238,8 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#3c87f7",
   },
-  showPasswordText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#3c87f7",
+  eyeIcon: {
+    padding: Spacing.one,
   },
   registerButton: {
     width: "100%",
