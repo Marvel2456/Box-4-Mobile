@@ -15,6 +15,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { BackButton } from "@/components/back-button";
 import { Colors, Spacing } from "@/constants/theme";
 import { AuthService } from "@/services/auth.service";
 
@@ -68,12 +69,7 @@ export default function RegisterScreen() {
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
           {/* Back Button */}
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => router.back()}
-          >
-            <Ionicons name="chevron-back" size={24} color="#000" />
-          </TouchableOpacity>
+          <BackButton />
 
           {/* Header */}
           <View style={styles.headerContainer}>
@@ -186,15 +182,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: Spacing.four,
     paddingBottom: Spacing.four,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#F5F5F5",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: Spacing.two,
   },
   headerContainer: {
     marginTop: Spacing.six,
