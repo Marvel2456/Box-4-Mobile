@@ -12,7 +12,7 @@ export default function RegisterRoleScreen() {
   const colors = Colors[scheme === "unspecified" ? "light" : scheme];
   const insets = useSafeAreaInsets();
 
-  const handleSelectRole = (role: "user" | "agent") => {
+  const handleSelectRole = (role: "buyer" | "agent") => {
     router.push({
       pathname: "/(auth)/register",
       params: { role },
@@ -31,7 +31,7 @@ export default function RegisterRoleScreen() {
 
         <TouchableOpacity
           style={[styles.roleButton, { backgroundColor: colors.buttonGrey }]}
-          onPress={() => handleSelectRole("user")}
+          onPress={() => handleSelectRole("buyer")}
         >
           <ThemedText style={[styles.roleButtonText, { color: colors.text }]}>
             User

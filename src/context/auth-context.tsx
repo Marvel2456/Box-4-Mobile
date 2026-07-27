@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { apiClient } from '@/api/client';
 
-type Role = 'agent' | 'user';
+type Role = 'agent' | 'buyer';
 
 type User = {
   role: Role;
@@ -41,7 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           // setUser(response.data);
           
           // Fallback simple state restoration for now
-          setUser({ role: 'user' }); 
+          setUser({ role: 'buyer' }); 
         }
       } catch (error) {
         console.error('Failed to restore session', error);

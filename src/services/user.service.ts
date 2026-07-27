@@ -4,7 +4,7 @@ export interface UserProfile {
   id: string;
   name: string;
   email: string;
-  role: 'agent' | 'user';
+  role: 'agent' | 'buyer';
 }
 
 export const UserService = {

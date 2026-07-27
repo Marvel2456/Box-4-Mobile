@@ -1,7 +1,7 @@
 import { apiClient } from "@/api/client";
 
 export interface LoginCredentials {
-  role: "agent" | "user";
+  role: "agent" | "buyer";
   email?: string;
   password?: string;
 }
@@ -14,7 +14,7 @@ export interface AuthResponse {
   token: string;
   user: {
     id: string;
-    role: "agent" | "user";
+    role: "agent" | "buyer";
   };
 }
 
@@ -24,6 +24,14 @@ export const AuthService = {
    */
   register: async (credentials: RegisterCredentials): Promise<AuthResponse> => {
     const response = await apiClient.post("/auth/register/", credentials);
+    return response.data;
+  },
+
+  /**
+   * Verify OTP
+   */
+  verifyOtp: async (otp: string): Promise<AuthResponse> => {
+    const response = await apiClient.post("/auth/verify-otp/", { otp });
     return response.data;
   },
 
