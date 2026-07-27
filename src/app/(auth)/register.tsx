@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -16,6 +16,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { BackButton } from "@/components/back-button";
+import { Toast, ToastRef } from "@/components/toast";
 import { Colors, Spacing } from "@/constants/theme";
 import { AuthService } from "@/services/auth.service";
 
@@ -34,10 +35,11 @@ export default function RegisterScreen() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const toastRef = useRef<ToastRef>(null);
 
   const handleRegister = async () => {
     if (!fullName || !email || !password) {
-      alert("Please fill in all fields.");
+      toastRef.current?.show("Please fill in all fields.", "error");
       return;
     }
 
@@ -63,6 +65,7 @@ export default function RegisterScreen() {
 
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
+      <Toast ref={toastRef} />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}

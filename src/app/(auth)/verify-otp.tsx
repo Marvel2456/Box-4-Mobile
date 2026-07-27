@@ -14,6 +14,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { BackButton } from "@/components/back-button";
+import { Toast, ToastRef } from "@/components/toast";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { Spacing } from "@/constants/theme";
@@ -29,6 +30,7 @@ export default function VerifyOtpScreen() {
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [isLoading, setIsLoading] = useState(false);
   const [timer, setTimer] = useState(1);
+  const toastRef = useRef<ToastRef>(null);
 
   const inputRefs = useRef<(TextInput | null)[]>([null, null, null, null]);
 
@@ -69,7 +71,7 @@ export default function VerifyOtpScreen() {
 
   const verifyCode = async (otpCode: string) => {
     if (!email) {
-      alert("Missing email information.");
+      toastRef.current?.show("Missing email information.", "error");
       return;
     }
 
@@ -82,11 +84,13 @@ export default function VerifyOtpScreen() {
 
       // Successfully verified. We can redirect to login, or simulate login if token is returned.
       // For now, redirect to login
-      alert("Account verified successfully! Please log in.");
-      router.replace("/(auth)/login");
+      toastRef.current?.show("Account verified successfully! Please log in.", "success");
+      setTimeout(() => {
+        router.replace("/(auth)/login");
+      }, 1000); // Wait for toast to animate
     } catch (error) {
       console.error("OTP Verification failed:", error);
-      alert("Invalid OTP code. Please try again.");
+      toastRef.current?.show("Invalid OTP code. Please try again.", "error");
       setOtp(["", "", "", ""]);
       inputRefs.current[0]?.focus();
     } finally {
@@ -97,19 +101,19 @@ export default function VerifyOtpScreen() {
   const handleResendOtp = async () => {
     if (timer > 0) return;
     if (!email) {
-      alert("Missing email information.");
+      toastRef.current?.show("Missing email information.", "error");
       return;
     }
 
     try {
       await AuthService.resendOtp({ email });
-      alert("New OTP sent!");
+      toastRef.current?.show("New OTP sent!", "success");
       setTimer(120);
       setOtp(["", "", "", ""]);
       inputRefs.current[0]?.focus();
     } catch (error) {
       console.error("Failed to resend OTP:", error);
-      alert("Failed to resend OTP. Please try again.");
+      toastRef.current?.show("Failed to resend OTP. Please try again.", "error");
     }
   };
 
@@ -121,6 +125,7 @@ export default function VerifyOtpScreen() {
 
   return (
     <ThemedView style={[styles.container, { paddingTop: insets.top }]}>
+      <Toast ref={toastRef} />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
