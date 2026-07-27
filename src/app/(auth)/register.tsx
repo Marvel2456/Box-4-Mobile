@@ -48,9 +48,11 @@ export default function RegisterScreen() {
         email,
         password,
       });
-      // Navigate to success or login after registering
-      // For now, redirect to login
-      router.replace("/(auth)/login");
+      // Navigate to verify OTP
+      router.replace({
+        pathname: "/(auth)/verify-otp",
+        params: { email },
+      });
     } catch (error) {
       console.error("Registration failed:", error);
     } finally {

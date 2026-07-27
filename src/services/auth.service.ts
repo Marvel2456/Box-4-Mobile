@@ -18,11 +18,22 @@ export interface AuthResponse {
   };
 }
 
+export interface RegisterResponse {
+  message: string;
+  user: {
+    id: string;
+    email: string;
+    full_name: string;
+    role: "agent" | "buyer";
+    is_email_verified: boolean;
+  };
+}
+
 export const AuthService = {
   /**
    * Register as an agent or user
    */
-  register: async (credentials: RegisterCredentials): Promise<AuthResponse> => {
+  register: async (credentials: RegisterCredentials): Promise<RegisterResponse> => {
     const response = await apiClient.post("/auth/register/", credentials);
     return response.data;
   },
@@ -30,8 +41,8 @@ export const AuthService = {
   /**
    * Verify OTP
    */
-  verifyOtp: async (otp: string): Promise<AuthResponse> => {
-    const response = await apiClient.post("/auth/verify-otp/", { otp });
+  verifyOtp: async (data: { email: string; otp_code: string }): Promise<AuthResponse> => {
+    const response = await apiClient.post("/auth/verify-otp/", data);
     return response.data;
   },
 
