@@ -11,11 +11,13 @@ export interface RegisterCredentials extends LoginCredentials {
 }
 
 export interface AuthResponse {
-  token: string;
-  user: {
-    id: string;
-    role: "agent" | "buyer";
-  };
+  refresh: string;
+  access: string;
+  role: "agent" | "buyer";
+  id: string;
+  email: string;
+  full_name: string;
+  is_email_verified: boolean;
 }
 
 export interface RegisterResponse {

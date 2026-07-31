@@ -19,6 +19,7 @@ import { ThemedView } from "@/components/themed-view";
 import { Toast, ToastRef } from "@/components/toast";
 import { Colors, Spacing } from "@/constants/theme";
 import { AuthService } from "@/services/auth.service";
+import { useAuthStore } from "@/store/auth.store";
 
 export default function LoginFormScreen() {
   const router = useRouter();
@@ -30,6 +31,7 @@ export default function LoginFormScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const toastRef = useRef<ToastRef>(null);
+  const setAuth = useAuthStore((state) => state.setAuth);
 
   const isFormValid = email.trim() !== "" && password.trim() !== "";
 
@@ -39,13 +41,19 @@ export default function LoginFormScreen() {
     setIsLoading(true);
     setErrorMessage(null);
     try {
-      await AuthService.login({
+      const response = await AuthService.login({
         role: "buyer", // Defaulting to buyer since role is required
         email,
         password,
       });
-      // Navigate to tabs/home upon successful login
-      router.replace("/(tabs)");
+      
+      setAuth(response);
+
+      if (response.role === "agent") {
+        router.replace("/(agent)");
+      } else {
+        router.replace("/(user)");
+      }
     } catch (error: any) {
       console.error("Login failed:", error);
       if (error?.response?.status === 400 && error?.response?.data) {
