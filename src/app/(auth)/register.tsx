@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -13,9 +13,9 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { BackButton } from "@/components/back-button";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { BackButton } from "@/components/back-button";
 import { Toast, ToastRef } from "@/components/toast";
 import { Colors, Spacing } from "@/constants/theme";
 import { AuthService } from "@/services/auth.service";
@@ -34,14 +34,18 @@ export default function RegisterScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const toastRef = useRef<ToastRef>(null);
 
+  const isFormValid =
+    fullName.trim() !== "" &&
+    email.trim() !== "" &&
+    password.trim() !== "" &&
+    termsAccepted;
+
   const handleRegister = async () => {
-    if (!fullName || !email || !password) {
-      toastRef.current?.show("Please fill in all fields.", "error");
-      return;
-    }
+    if (!isFormValid) return; // Fallback in case it's somehow pressed
 
     setIsLoading(true);
     try {
@@ -137,7 +141,10 @@ export default function RegisterScreen() {
                 onChangeText={setPassword}
                 secureTextEntry={!showPassword}
               />
-              <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
+              <TouchableOpacity
+                onPress={() => setShowPassword(!showPassword)}
+                style={styles.eyeIcon}
+              >
                 <Ionicons
                   name={showPassword ? "eye-off-outline" : "eye-outline"}
                   size={20}
@@ -147,9 +154,18 @@ export default function RegisterScreen() {
             </View>
 
             <View style={styles.formOptionsRow}>
-              <TouchableOpacity>
+              <TouchableOpacity
+                style={styles.checkboxContainer}
+                onPress={() => setTermsAccepted(!termsAccepted)}
+              >
+                <Ionicons
+                  name={termsAccepted ? "checkbox" : "square-outline"}
+                  size={20}
+                  color={termsAccepted ? Colors.light.tintRed : "#777"}
+                  style={styles.checkboxIcon}
+                />
                 <ThemedText style={styles.termsText}>
-                  Terms of service
+                  I agree to the Terms of service
                 </ThemedText>
               </TouchableOpacity>
             </View>
@@ -160,9 +176,10 @@ export default function RegisterScreen() {
             style={[
               styles.registerButton,
               { backgroundColor: Colors.light.tintRed },
+              (!isFormValid || isLoading) && styles.registerButtonDisabled,
             ]}
             onPress={handleRegister}
-            disabled={isLoading}
+            disabled={!isFormValid || isLoading}
           >
             {isLoading ? (
               <ActivityIndicator color="#fff" />
@@ -238,6 +255,13 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#3c87f7",
   },
+  checkboxContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  checkboxIcon: {
+    marginRight: Spacing.one,
+  },
   eyeIcon: {
     padding: Spacing.one,
   },
@@ -249,6 +273,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 60, // Push it down
+  },
+  registerButtonDisabled: {
+    opacity: 0.5,
   },
   registerButtonText: {
     fontSize: 18,
