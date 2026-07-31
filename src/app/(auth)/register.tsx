@@ -36,6 +36,7 @@ export default function RegisterScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const toastRef = useRef<ToastRef>(null);
 
   const isFormValid =
@@ -48,6 +49,7 @@ export default function RegisterScreen() {
     if (!isFormValid) return; // Fallback in case it's somehow pressed
 
     setIsLoading(true);
+    setErrorMessage(null);
     try {
       await AuthService.register({
         role,
@@ -60,8 +62,27 @@ export default function RegisterScreen() {
         pathname: "/(auth)/verify-otp",
         params: { email },
       });
-    } catch (error) {
-      console.error("Registration failed:", error);
+    } catch (error: any) {
+      if (error?.response?.status === 400 && error?.response?.data) {
+        const data = error.response.data;
+        if (data.email && Array.isArray(data.email) && data.email.length > 0) {
+          setErrorMessage(data.email[0]);
+        } else if (typeof data === "object") {
+          const firstKey = Object.keys(data)[0];
+          const firstError = data[firstKey];
+          if (Array.isArray(firstError) && firstError.length > 0) {
+            setErrorMessage(firstError[0]);
+          } else if (typeof firstError === "string") {
+            setErrorMessage(firstError);
+          } else {
+            setErrorMessage("Registration failed. Please check your details.");
+          }
+        } else {
+          setErrorMessage("Registration failed. Please try again.");
+        }
+      } else {
+        setErrorMessage("An unexpected error occurred. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -91,6 +112,11 @@ export default function RegisterScreen() {
 
           {/* Form */}
           <View style={styles.formContainer}>
+            {errorMessage ? (
+              <ThemedText style={styles.errorText}>
+                {errorMessage.toUpperCase()}
+              </ThemedText>
+            ) : null}
             <View style={styles.inputWrapper}>
               <Ionicons
                 name="person-outline"
@@ -223,6 +249,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#555",
     marginTop: Spacing.one,
+    fontWeight: "500",
+  },
+  errorText: {
+    color: Colors.light.tintRed,
+    fontSize: 14,
+    marginBottom: Spacing.one,
     fontWeight: "500",
   },
   formContainer: {
