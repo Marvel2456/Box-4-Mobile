@@ -46,7 +46,7 @@ export default function LoginFormScreen() {
         email,
         password,
       });
-      
+
       setAuth(response);
 
       if (response.role === "agent") {
@@ -89,7 +89,7 @@ export default function LoginFormScreen() {
           {/* Header */}
           <View style={styles.headerContainer}>
             <ThemedText style={styles.title}>
-              Let's{" "}
+              Let&apos;s{" "}
               <ThemedText style={styles.titleHighlight}>Sign In</ThemedText>
             </ThemedText>
             <ThemedText style={styles.subtitle}>
